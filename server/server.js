@@ -1,57 +1,30 @@
-// server.js
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
-const RoomManager = require("./rooms");
-const DrawingState = require("./drawing-state");
+// server.js — important parts
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const httpServer = http.createServer(app);
 
-app.use(express.static("../client"));
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`✅ Server running at http://localhost:${PORT}`));
-
-const roomManager = new RoomManager();
-const drawingState = new DrawingState();
-
-io.on("connection", (socket) => {
-  console.log("🔌 New client:", socket.id);
-
-  socket.on("join", ({ roomId, username, userId }) => {
-    roomManager.addUser(roomId, socket.id, username);
-    socket.join(roomId);
-    console.log(`👤 ${username} joined ${roomId}`);
-
-    const strokes = drawingState.getReplayStrokes(roomId);
-    socket.emit("replay", strokes);
-    io.to(roomId).emit("user-list", roomManager.getUserList(roomId));
-  });
-
-  socket.on("draw", ({ roomId, userId, points, color, width }) => {
-    const op = drawingState.addStroke(roomId, { points, color, width, userId });
-    io.to(roomId).emit("op", op);
-  });
-
-  socket.on("clear", ({ roomId, userId }) => {
-    const op = drawingState.addClear(roomId, { userId });
-    io.to(roomId).emit("op", op);
-  });
-
-  socket.on("undo", ({ roomId, targetOpId, userId }) => {
-    const op = drawingState.addUndo(roomId, { targetOpId, userId });
-    io.to(roomId).emit("op", op);
-  });
-
-  socket.on("disconnect", () => {
-    const leftRoom = roomManager.removeUser(socket.id);
-    if (leftRoom) {
-      io.to(leftRoom).emit("user-list", roomManager.getUserList(leftRoom));
-      console.log(`❌ User left ${leftRoom}`);
-    }
-  });
+// permit CORS so Vercel frontend can connect
+const io = new Server(httpServer, {
+  cors: {
+    origin: ["https://collaborative-canvas-eta.vercel.app", "https://collaborative-canvas-eta.vercel.app/","*"],
+    methods: ["GET", "POST"],
+    credentials: true
+  },
+  transports: ['websocket', 'polling']
 });
 
+io.on('connection', socket => {
+  console.log('socket connected', socket.id);
+  // your handlers...
+});
 
+app.get('/', (req, res) => res.send('OK'));
+
+// use Render-provided port
+const PORT = process.env.PORT || 3000;
+httpServer.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
