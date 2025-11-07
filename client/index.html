@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Collaborative Canvas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="toolbar">
+    <div class="left">
+      <input id="roomInput" placeholder="Room ID (optional)" />
+      <button id="joinBtn">Join</button>
+    </div>
+
+    <div class="center">
+      <input type="color" id="colorPicker" value="#1e40af" />
+      <input id="brushSize" type="range" min="1" max="25" value="4" />
+      <button id="undoBtn" title="Undo">↩</button>
+      <button id="clearBtn" title="Clear">🧹</button>
+    </div>
+
+    <div class="right">
+      <span id="users">👥 <span id="userList">-</span></span>
+    </div>
+  </header>
+
+  <main class="canvas-container">
+    <div id="canvasWrapper" style="position:relative; width:90%; height:80%;">
+      <canvas id="draw" style="position:absolute; left:0; top:0;"></canvas>
+      <div id="cursors" style="position:absolute; left:0; top:0; right:0; bottom:0; pointer-events:none;"></div>
+    </div>
+  </main>
+
+  <footer class="footer">🎨 Real-time Collaborative Canvas</footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="websocket.js"></script>
+  <script src="canvas.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
