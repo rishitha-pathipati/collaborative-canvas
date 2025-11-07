@@ -1,30 +1,35 @@
-// main.js - Clean version (no duplicate variables)
-document.getElementById('joinBtn').addEventListener('click', () => {
-  const room = document.getElementById('roomInput').value.trim() || 'default-room';
-  window.ROOM_ID = room;
-  window.USER = window.USER || { id: crypto.randomUUID(), name: 'User-' + Math.floor(Math.random() * 1000) };
-  joinRoom(room);
-  document.getElementById('joinBtn').disabled = true;
-  document.getElementById('roomInput').disabled = true;
+// client/main.js
+
+// get DOM elements
+const joinBtn = document.getElementById('join-btn');
+const roomInput = document.getElementById('room-input');
+
+// join handler
+async function joinRoom() {
+  const roomId = roomInput.value.trim();
+  if (!roomId) {
+    alert('Enter room id');
+    return;
+  }
+  window.ROOM_ID = roomId;
+
+  // make sure socket exists and is connected (wait if needed)
+  const s = window.socket;
+  if (!s) {
+    console.error('socket not available');
+    return;
+  }
+
+  s.emit('join', { roomId, userId: window.USER.id, name: window.USER.name });
+  console.log('joined room', roomId);
+}
+
+// hook button
+joinBtn.addEventListener('click', joinRoom);
+
+// listen for incoming drawing events (example event: 'draw')
+window.socket?.on('draw', (op) => {
+  // implement replay logic: draw op on canvas
+  console.log('received draw op', op);
+  // replayOp(op);   <-- call your existing drawing code here
 });
-
-const colorPickerEl = document.getElementById('colorPicker');
-const brushSizeEl = document.getElementById('brushSize');
-const undoBtn = document.getElementById('undoBtn');
-const clearBtn = document.getElementById('clearBtn');
-
-colorPickerEl.addEventListener('change', (e) => {
-  window.setBrush(e.target.value, parseInt(brushSizeEl.value, 10));
-});
-
-brushSizeEl.addEventListener('input', (e) => {
-  window.setBrush(colorPickerEl.value, parseInt(e.target.value, 10));
-});
-
-undoBtn.addEventListener('click', () => window.undoLastGlobal());
-clearBtn.addEventListener('click', () => window.clearLocalAndNotify());
-
-window.onUserList = (users) => {
-  document.getElementById('userList').textContent = users.join(', ');
-};
-

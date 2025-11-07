@@ -38,5 +38,14 @@
   <script src="websocket.js"></script>
   <script src="canvas.js"></script>
   <script src="main.js"></script>
+    <!-- Socket.IO client (from CDN) -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+  <!-- websocket.js must run AFTER the socket.io client -->
+  <script src="./websocket.js"></script>
+
+  <!-- main.js uses UI & join button and must come AFTER websocket.js -->
+  <script src="./main.js"></script>
+
 </body>
 </html>
