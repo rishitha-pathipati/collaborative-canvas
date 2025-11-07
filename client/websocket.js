@@ -1,8 +1,13 @@
 // websocket.js
-const socket = io();
+// Connect to your live backend on Render
+const socket = io('https://collab-backend-tj3p.onrender.com', {
+  transports: ['websocket', 'polling'],
+  withCredentials: true,
+});
+
 window.socket = socket;
 window.ROOM_ID = null;
-window.USER = { id: crypto.randomUUID(), name: 'User-'+Math.floor(Math.random()*1000) };
+window.USER = { id: crypto.randomUUID(), name: 'User-' + Math.floor(Math.random() * 1000) };
 
 function joinRoom(roomId) {
   window.ROOM_ID = roomId || 'default-room';
