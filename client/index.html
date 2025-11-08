@@ -9,8 +9,8 @@
 <body>
   <header class="toolbar">
     <div class="left">
-      <input id="roomInput" placeholder="Room ID (optional)" />
-      <button id="joinBtn">Join</button>
+      <input id="room-input" placeholder="Room ID (optional)" />
+      <button id="join-btn">Join</button>
     </div>
 
     <div class="center">
@@ -34,14 +34,13 @@
 
   <footer class="footer">🎨 Real-time Collaborative Canvas</footer>
 
-  <!-- Socket.IO client (CDN) - must load before your code -->
+  <!-- ✅ Load Socket.IO client (from CDN) BEFORE your scripts -->
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
-  <!-- websocket initializer (creates window.socket) -->
+  <!-- ✅ Socket initialization (connects to backend) -->
   <script src="./websocket.js"></script>
 
-  <!-- UI logic that uses window.socket -->
+  <!-- ✅ Main app logic (join, draw, undo, etc.) -->
   <script src="./main.js"></script>
 </body>
 </html>
-
