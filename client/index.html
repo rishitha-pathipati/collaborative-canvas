@@ -34,14 +34,11 @@
 
   <footer class="footer">🎨 Real-time Collaborative Canvas</footer>
 
-  <!-- ✅ Load Socket.IO client (from CDN) BEFORE your scripts -->
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<!-- near bottom of body -->
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="./websocket.js"></script>
+<script src="./canvas.js"></script>
+<script src="./main.js"></script>
 
-  <!-- ✅ Socket initialization (connects to backend) -->
-  <script src="./websocket.js"></script>
-
-  <!-- ✅ Main app logic (join, draw, undo, etc.) -->
-  <script src="./main.js"></script>
-  <script src="./canvas.js"></script>
 </body>
 </html>
